@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         bt_set.setOnClickListener(new View.OnClickListener() {
 
-            @RequiresApi(api = Build.VERSION_CODES.M)
+          
             @Override
             public void onClick(View view) {
 
@@ -69,13 +69,25 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("operation","start");
                 pendingIntent = PendingIntent.getBroadcast(MainActivity.this,1,i,PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY,timePicker.getHour());
-                calendar.set(Calendar.MINUTE,timePicker.getMinute());
-                calendar.set(Calendar.SECOND,0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                    calendar.set(Calendar.SECOND, 0);
+                    txt.setText("ALARM SET AT "+timePicker.getHour()+":"+timePicker.getMinute());
+
+                }
+                else{
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                    calendar.set(Calendar.SECOND, 0);
+                    txt.setText("ALARM SET AT "+timePicker.getCurrentHour()+":"+timePicker.getCurrentMinute());
+
+                }
                 //calendar.add(Calendar.SECOND,10);
                 alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-                txt.setText("ALARM SET AT "+timePicker.getHour()+":"+timePicker.getMinute());
             }
         });
 
